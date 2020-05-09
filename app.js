@@ -4,6 +4,9 @@ const cors = require('cors');
 const express = require('express');
 const app = express();
 const port = 3000;
+
+const passport = require('./utils/pass');
+const authRoute = require('./routes/authRoute');
 const catRoute = require('./routes/catRoute');
 const userRoute = require('./routes/userRoute');
 
@@ -14,11 +17,7 @@ app.use(express.static('public'));
 app.use(express.static('uploads'));
 
 
-app.use('/cat', catRoute);
-app.use('/user', userRoute);
-
-app.get('/cat', (req, res) => {
-  res.send('From this endpoint you can get cats.');
-});
+app.use('/cat', passport.authenticate('jwt', {session: false}), catRoute);
+app.use('/user', passport.authenticate('jwt', {session: false}), userRoute);
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

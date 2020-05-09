@@ -7,6 +7,21 @@ const multer = require('multer');
 const upload = multer({dest: './uploads/'});
 const catController = require('../controllers/catController');
 
+// dont save if not image: (needs to be hoisted, that's why not arrow function)
+function fileFilter(req, file, cb) {
+  console.log('filefilter', file);
+  // The function should call `cb` with a boolean
+  // to indicate if the file should be accepted
+
+  // To reject this file pass `false`, like so:
+  if (!file.mimetype.includes('image')) {
+    return cb(null, false, new Error('I don\'t have a clue!'));
+  } else {
+    // To accept the file pass `true`, like so:
+    cb(null, true);
+  }
+};
+
 router.get('/', catController.cat_list_get);
 
 router.get('/:id', catController.cat_get);
